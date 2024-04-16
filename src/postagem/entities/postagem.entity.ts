@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({name: "tb_postagem"})
+@Entity({name: "tb_postagens"})
 export class Postagem{
 
     @PrimaryGeneratedColumn()//Chave primária e auto_increment
@@ -13,7 +13,6 @@ export class Postagem{
     texto: string;
 
     @UpdateDateColumn()
-    date: Date;
-
+    data: Date;
     
 }
