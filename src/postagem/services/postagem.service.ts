@@ -5,6 +5,7 @@ import { DeleteResult, ILike, Repository } from "typeorm";
 
 @Injectable()
 export class PostagemService{
+    temaService: any;
     constructor(
         @InjectRepository(Postagem)
         private postagemRepository: Repository<Postagem>
@@ -12,6 +13,9 @@ export class PostagemService{
 
     async findAll(): Promise<Postagem[]>{
         return await this.postagemRepository.find();
+        relations: {
+            tema: true
+        }
 
         //SELECT * FROM tb_postagem;
     }
@@ -20,6 +24,9 @@ export class PostagemService{
         let postagem = await this.postagemRepository.findOne({
             where:{
                 id
+            },
+            relations: {
+                tema: true
             }
         });
         //Checar se a postagem não foi encontrada
@@ -36,12 +43,23 @@ export class PostagemService{
         return await this.postagemRepository.find({
             where:{
                 titulo: ILike(`%${titulo}%`)
+            },
+            relations: {
+                tema: true
             }
         })
         //SELECT * FROM tb_postagens WHERE titulo LIKE '%?titulo%'
     }
 
     async create(postagem: Postagem): Promise<Postagem>{
+        //Caso o tema tenha sido preenchido
+        if(postagem.tema){
+            let tema = await this.temaService.findById(postagem.tema.id)
+
+            if(!tema)
+                throw new HttpException('Tema não foi encontrado!', HttpStatus.NOT_FOUND)
+        }
+        
         return await this.postagemRepository.save(postagem);
         //INSERT INTO tb_postagens (titulo,texto,data) VALUES (?,?,server);
     }
@@ -51,6 +69,13 @@ export class PostagemService{
             
         if (!buscaPostagem || !postagem.id)
             throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND)
+
+        if(postagem.tema){
+            let tema = await this.temaService.findById(postagem.tema.id)
+
+            if(!tema)
+                throw new HttpException('Tema não foi encontrado!', HttpStatus.NOT_FOUND)
+        }
 
         return await this.postagemRepository.save(postagem);
         //UPDATE tb_postagens SET titulo = ?, texto = ?, data = server WHERE id = ?;

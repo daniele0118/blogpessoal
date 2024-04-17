@@ -1,18 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { IsNotEmpty } from "class-validator"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Tema } from "../../tema/entities/tema.entity"
 
 @Entity({name: "tb_postagens"})
-export class Postagem{
+export class Postagem {
 
-    @PrimaryGeneratedColumn()//Chave primária e auto_increment
-    id: number;
+    @PrimaryGeneratedColumn()    
+    id: number
 
+    @IsNotEmpty()
     @Column({length: 100, nullable: false})
-    titulo: string;
+    titulo: string
 
+    @IsNotEmpty()
     @Column({length: 1000, nullable: false})
-    texto: string;
+    texto: string
 
     @UpdateDateColumn()
-    data: Date;
+    data: Date
     
+    @ManyToOne(() => Tema, (tema) => tema.postagem, {
+        onDelete: "CASCADE"
+    })
+    tema: Tema//Chave estrangeira
+
 }
