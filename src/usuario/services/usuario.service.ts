@@ -53,7 +53,13 @@ export class UsuarioService {
         
         let buscaUsuario = await this.findByUsuario(usuario.usuario);
 
-        if (!buscaUsuario) {
+        if (!usuario.foto)
+            usuario.foto = 'https://i.imgur.com/Sk5SjWE.jpg'
+
+            if (!buscaUsuario) {
+
+
+
             usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
             return await this.usuarioRepository.save(usuario);
         }
@@ -66,6 +72,9 @@ export class UsuarioService {
 
         let updateUsuario: Usuario = await this.findById(usuario.id);
         let buscaUsuario = await this.findByUsuario(usuario.usuario);
+
+        if (!usuario.foto)
+            usuario.foto = 'https://i.imgur.com/Sk5SjWE.jpg'
 
         if (!updateUsuario)
             throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
