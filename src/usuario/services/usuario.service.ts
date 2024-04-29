@@ -59,7 +59,6 @@ export class UsuarioService {
             if (!buscaUsuario) {
 
 
-
             usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
             return await this.usuarioRepository.save(usuario);
         }
