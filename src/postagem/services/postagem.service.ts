@@ -16,7 +16,6 @@ export class PostagemService{
         relations: {
             tema: true
         }
-
         //SELECT * FROM tb_postagem;
     }
 
@@ -33,7 +32,6 @@ export class PostagemService{
         if (!postagem)
             throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND);
 
-        //Retornar a postagem, caso ela exista
         return postagem;
 
         //SELECT * FROM tb_postagens
